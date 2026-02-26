@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bricks-to-Weight | Bricks-Repo</title>
+    <style>
+        :root { --red: #e3000b; --black: #111; --gray: #f4f4f4; --yellow: #ffdd00; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--gray); text-align: center; color: var(--black); }
+        
+        /* Навігація до "Матері" */
+        nav { background: var(--black); padding: 15px; text-align: left; }
+        nav a { color: white; text-decoration: none; font-weight: bold; font-size: 0.9rem; transition: 0.3s; }
+        nav a:hover { color: var(--red); }
+
+        .container { max-width: 450px; margin: 40px auto; background: white; padding: 40px 20px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-bottom: 5px solid var(--red); }
+        h2 { margin-top: 0; font-size: 1.8rem; }
+        input { width: 80%; padding: 15px; margin: 20px 0; border: 3px solid #eee; border-radius: 12px; font-size: 1.5rem; text-align: center; transition: 0.3s; }
+        input:focus { border-color: var(--red); outline: none; }
+        
+        .result-box { background: var(--gray); padding: 20px; border-radius: 15px; margin: 20px 0; }
+        .result { font-size: 3rem; font-weight: 900; color: var(--red); display: block; }
+        .label { font-size: 0.9rem; color: #666; font-weight: bold; text-transform: uppercase; }
+
+        .btn-coffee { display: inline-block; background: var(--yellow); color: black; padding: 12px 25px; border-radius: 10px; text-decoration: none; font-weight: bold; margin-top: 20px; border: 2px solid black; }
+        
+        .feedback { margin-top: 40px; font-size: 0.85rem; color: #888; border-top: 1px solid #eee; padding-top: 20px; }
+        .feedback a { color: var(--red); font-weight: bold; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div style="max-width: 1000px; margin: 0 auto;">
+        <a href="/" id="nav-back">⬅ Back to Bricks-Repo Hub</a>
+    </div>
+</nav>
+
+<div class="container">
+    <h2 id="t-title">Bricks-to-Weight</h2>
+    <p id="t-desc">Enter LEGO weight in grams:</p>
+    
+    <input type="number" id="weight" placeholder="0" oninput="calculate()">
+    
+    <div class="result-box">
+        <span class="result" id="res">0</span>
+        <span class="label" id="t-pieces">Estimated Pieces</span>
+    </div>
+
+    <a href="https://buymeacoffee.com/YOUR_USER" class="btn-coffee" id="t-coffee">☕ Support Project</a>
+
+    <div class="feedback">
+        <p id="t-idea">💡 Have a better idea? <a href="ВАШЕ_ПОСИЛАННЯ_ФОРМА" target="_blank" id="t-suggest">Suggest a tool</a></p>
+    </div>
+</div>
+
+<script>
+    const i18n = {
+        en: {
+            'nav-back': "⬅ Back to Bricks-Repo Hub",
+            't-title': "Bricks-to-Weight",
+            't-desc': "Enter LEGO weight in grams:",
+            't-pieces': "Estimated Pieces",
+            't-coffee': "☕ Support Project",
+            't-idea': "💡 Have a better idea? ",
+            't-suggest': "Suggest a tool"
+        },
+        ua: {
+            'nav-back': "⬅ Назад до Хабу Bricks-Repo",
+            't-title': "Калькулятор деталей",
+            't-desc': "Введіть вагу LEGO в грамах:",
+            't-pieces': "Приблизна кількість деталей",
+            't-coffee': "☕ Підтримати проект",
+            't-idea': "💡 Маєте ідею краще? ",
+            't-suggest': "Запропонувати інструмент"
+        }
+    };
+
+    function calculate() {
+        let weight = document.getElementById('weight').value;
+        // Коефіцієнт 1.5г на деталь — золотий стандарт для розсипу
+        let count = Math.round(weight / 1.5);
+        document.getElementById('res').innerText = weight > 0 ? count.toLocaleString() : 0;
+    }
+
+    function setLang() {
+        const lang = localStorage.getItem('bricks_lang') || (navigator.language.includes('uk') ? 'ua' : 'en');
+        for (let id in i18n[lang]) {
+            const el = document.getElementById(id);
+            if (el) el.innerText = i18n[lang][id];
+        }
+    }
+    setLang();
+</script>
+
+</body>
+</html>
