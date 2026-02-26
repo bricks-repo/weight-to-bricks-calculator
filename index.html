@@ -4,43 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bricks-to-Weight | Bricks-Repo</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧱</text></svg>">
+    
     <style>
         :root { --red: #e3000b; --black: #111; --gray: #f4f4f4; --yellow: #ffdd00; }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--gray); text-align: center; color: var(--black); }
         
-        /* Навігація до "Матері" */
-        nav { background: var(--black); padding: 15px; text-align: left; }
-        nav a { color: white; text-decoration: none; font-weight: bold; font-size: 0.9rem; transition: 0.3s; }
-        nav a:hover { color: var(--red); }
+        nav { background: var(--black); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; }
+        nav a { color: white; text-decoration: none; font-weight: bold; font-size: 0.85rem; }
+        .lang-btns button { background: none; border: 1px solid #444; color: white; cursor: pointer; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; margin-left: 5px; }
 
-        .container { max-width: 450px; margin: 40px auto; background: white; padding: 40px 20px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-bottom: 5px solid var(--red); }
-        h2 { margin-top: 0; font-size: 1.8rem; }
-        input { width: 80%; padding: 15px; margin: 20px 0; border: 3px solid #eee; border-radius: 12px; font-size: 1.5rem; text-align: center; transition: 0.3s; }
-        input:focus { border-color: var(--red); outline: none; }
+        .container { max-width: 450px; margin: 30px auto; background: white; padding: 30px 20px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-bottom: 5px solid var(--red); }
+        input { width: 70%; padding: 15px; margin: 15px 0; border: 3px solid #eee; border-radius: 12px; font-size: 1.8rem; text-align: center; font-weight: bold; }
         
-        .result-box { background: var(--gray); padding: 20px; border-radius: 15px; margin: 20px 0; }
-        .result { font-size: 3rem; font-weight: 900; color: var(--red); display: block; }
-        .label { font-size: 0.9rem; color: #666; font-weight: bold; text-transform: uppercase; }
+        .modes { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        .mode-btn { background: var(--gray); border: 1px solid #ddd; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; transition: 0.2s; }
+        .mode-btn.active { background: var(--red); color: white; border-color: var(--red); }
 
-        .btn-coffee { display: inline-block; background: var(--yellow); color: black; padding: 12px 25px; border-radius: 10px; text-decoration: none; font-weight: bold; margin-top: 20px; border: 2px solid black; }
-        
-        .feedback { margin-top: 40px; font-size: 0.85rem; color: #888; border-top: 1px solid #eee; padding-top: 20px; }
+        .result-box { background: var(--black); color: white; padding: 25px; border-radius: 20px; margin: 20px 0; }
+        .result { font-size: 3.5rem; font-weight: 900; color: var(--yellow); display: block; line-height: 1; }
+        .label { font-size: 0.8rem; text-transform: uppercase; opacity: 0.7; letter-spacing: 1px; }
+
+        .btn-coffee { display: inline-block; background: var(--yellow); color: black; padding: 14px 28px; border-radius: 12px; text-decoration: none; font-weight: bold; margin-top: 15px; border: 2px solid black; box-shadow: 0 4px 0 black; transition: 0.2s; }
+        .btn-coffee:hover { transform: translateY(-2px); box-shadow: 0 6px 0 black; }
+
+        .feedback { margin-top: 30px; font-size: 0.8rem; color: #888; }
         .feedback a { color: var(--red); font-weight: bold; text-decoration: none; }
     </style>
 </head>
 <body>
 
 <nav>
-    <div style="max-width: 1000px; margin: 0 auto;">
-        <a href="/" id="nav-back">⬅ Back to Bricks-Repo Hub</a>
+    <a href="/" id="nav-back">⬅ Back to Hub</a>
+    <div class="lang-btns">
+        <button onclick="changeLang('en')">EN</button>
+        <button onclick="changeLang('ua')">UA</button>
     </div>
 </nav>
 
 <div class="container">
     <h2 id="t-title">Bricks-to-Weight</h2>
-    <p id="t-desc">Enter LEGO weight in grams:</p>
     
+    <div class="modes">
+        <button class="mode-btn active" onclick="setMode(1.5, this)" id="m-mix">Mixed</button>
+        <button class="mode-btn" onclick="setMode(2.0, this)" id="m-tech">Technic</button>
+        <button class="mode-btn" onclick="setMode(0.6, this)" id="m-small">Small</button>
+    </div>
+
     <input type="number" id="weight" placeholder="0" oninput="calculate()">
+    <p id="t-desc">Weight in grams (g)</p>
     
     <div class="result-box">
         <span class="result" id="res">0</span>
@@ -50,47 +62,63 @@
     <a href="https://buymeacoffee.com/YOUR_USER" class="btn-coffee" id="t-coffee">☕ Support Project</a>
 
     <div class="feedback">
-        <p id="t-idea">💡 Have a better idea? <a href="ВАШЕ_ПОСИЛАННЯ_ФОРМА" target="_blank" id="t-suggest">Suggest a tool</a></p>
+        <p id="t-idea">💡 Idea for a tool? <a href="ВАША_ФОРМА" target="_blank" id="t-suggest">Suggest here</a></p>
     </div>
 </div>
 
 <script>
+    let currentRatio = 1.5;
+
     const i18n = {
         en: {
             'nav-back': "⬅ Back to Bricks-Repo Hub",
-            't-title': "Bricks-to-Weight",
-            't-desc': "Enter LEGO weight in grams:",
+            't-title': "Weight Calculator",
+            't-desc': "Weight in grams (g)",
             't-pieces': "Estimated Pieces",
             't-coffee': "☕ Support Project",
-            't-idea': "💡 Have a better idea? ",
-            't-suggest': "Suggest a tool"
+            't-suggest': "Suggest here",
+            'm-mix': "Mixed", 'm-tech': "Technic", 'm-small': "Small",
+            't-idea': "💡 Idea for a tool? "
         },
         ua: {
-            'nav-back': "⬅ Назад до Хабу Bricks-Repo",
+            'nav-back': "⬅ Назад до Хабу",
             't-title': "Калькулятор деталей",
-            't-desc': "Введіть вагу LEGO в грамах:",
-            't-pieces': "Приблизна кількість деталей",
+            't-desc': "Вага в грамах (г)",
+            't-pieces': "Приблизна кількість",
             't-coffee': "☕ Підтримати проект",
-            't-idea': "💡 Маєте ідею краще? ",
-            't-suggest': "Запропонувати інструмент"
+            't-suggest': "Напишіть нам",
+            'm-mix': "Суміш", 'm-tech': "Технік", 'm-small': "Дрібні",
+            't-idea': "💡 Маєте ідею? "
         }
     };
 
+    function setMode(ratio, btn) {
+        currentRatio = ratio;
+        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        calculate();
+    }
+
     function calculate() {
         let weight = document.getElementById('weight').value;
-        // Коефіцієнт 1.5г на деталь — золотий стандарт для розсипу
-        let count = Math.round(weight / 1.5);
+        let count = Math.round(weight / currentRatio);
         document.getElementById('res').innerText = weight > 0 ? count.toLocaleString() : 0;
     }
 
-    function setLang() {
-        const lang = localStorage.getItem('bricks_lang') || (navigator.language.includes('uk') ? 'ua' : 'en');
+    function changeLang(lang) {
+        localStorage.setItem('bricks_lang', lang);
+        applyLang(lang);
+    }
+
+    function applyLang(lang) {
         for (let id in i18n[lang]) {
             const el = document.getElementById(id);
             if (el) el.innerText = i18n[lang][id];
         }
     }
-    setLang();
+
+    const savedLang = localStorage.getItem('bricks_lang') || (navigator.language.includes('uk') ? 'ua' : 'en');
+    applyLang(savedLang);
 </script>
 
 </body>
