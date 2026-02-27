@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bricks-to-Weight | Bricks-Repo</title>
-    
     <script src="config.js"></script>
-
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧱</text></svg>">
     <style>
         :root { --red: #e3000b; --black: #111; --gray: #f4f4f4; --yellow: #ffdd00; }
@@ -14,12 +12,20 @@
         nav { background: var(--black); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; }
         nav a { color: white; text-decoration: none; font-weight: bold; font-size: 0.85rem; }
         .container { max-width: 450px; margin: 30px auto; background: white; padding: 30px 20px; border-radius: 25px; border-bottom: 5px solid var(--red); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        input { width: 80%; padding: 15px; margin: 15px 0; border: 3px solid #eee; border-radius: 12px; font-size: 1.8rem; text-align: center; }
+        
+        /* Кнопки вибору режимів */
+        .modes { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        .mode-btn { background: var(--gray); border: 1px solid #ddd; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; transition: 0.2s; }
+        .mode-btn.active { background: var(--red); color: white; border-color: var(--red); }
+
+        input { width: 80%; padding: 15px; margin: 15px 0; border: 3px solid #eee; border-radius: 12px; font-size: 1.8rem; text-align: center; font-weight: bold; }
         .result-box { background: var(--black); color: white; padding: 25px; border-radius: 20px; margin: 20px 0; }
-        .result { font-size: 3.5rem; font-weight: 900; color: var(--yellow); display: block; }
+        .result { font-size: 3.5rem; font-weight: 900; color: var(--yellow); display: block; line-height: 1; }
+        
         .report-preview { display: none; background: #222; margin-top: 20px; padding: 15px; border-radius: 12px; text-align: left; font-size: 0.85rem; color: #ccc; white-space: pre-line; }
-        .btn-copy { background: var(--yellow); color: black; border: none; padding: 10px; border-radius: 8px; width: 100%; font-weight: bold; cursor: pointer; }
+        .btn-copy { background: var(--yellow); color: black; border: none; padding: 12px; border-radius: 8px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 10px; }
         .btn-coffee { display: inline-block; background: var(--yellow); color: black; padding: 14px 28px; border-radius: 12px; text-decoration: none; font-weight: bold; margin-top: 20px; border: 2px solid black; box-shadow: 0 4px 0 black; }
+        
         .feedback { margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px; font-size: 0.85rem; color: #888; }
         .feedback a { color: var(--red); font-weight: bold; text-decoration: underline; }
     </style>
@@ -36,7 +42,15 @@
 
 <div class="container">
     <h2 id="t-title">Weight Calculator</h2>
+    
+    <div class="modes">
+        <button class="mode-btn active" onclick="setMode(1.5, this)" id="m-mix">Mixed</button>
+        <button class="mode-btn" onclick="setMode(2.0, this)" id="m-tech">Technic</button>
+        <button class="mode-btn" onclick="setMode(0.6, this)" id="m-small">Small</button>
+    </div>
+
     <input type="number" id="weight" placeholder="0" oninput="calculate()">
+    <p id="t-desc" style="font-size: 0.8rem; opacity: 0.6;">Weight in grams (g)</p>
     
     <div class="result-box">
         <span class="result" id="res">0</span>
@@ -55,23 +69,28 @@
 </div>
 
 <script>
+    let currentRatio = 1.5;
     const i18n = {
-        en: { 't-title': "Weight Calculator", 't-pieces': "Estimated Pieces", 't-copy': "📋 Copy Report", 'copied': "Copied!", 'report': "📊 LEGO Report:\nWeight: {w}g\nEstimated: ~{p} pcs.\nCalculated via: {u}", 'idea-html': '💡 Idea for a tool? <a href="{s}" target="_blank">Suggest here</a>' },
-        ua: { 't-title': "Калькулятор деталей", 't-pieces': "Приблизна кількість", 't-copy': "📋 Копіювати звіт", 'copied': "Скопійовано!", 'report': "📊 LEGO Звіт:\nВага: {w}г\nКількість: ~{p} шт.\nРозраховано через: {u}", 'idea-html': '💡 Маєте ідею? <a href="{s}" target="_blank">Напишіть нам</a>' }
+        en: { 't-title': "Weight Calculator", 't-pieces': "Estimated Pieces", 't-copy': "📋 Copy Report", 'copied': "Copied!", 'm-mix': "Mixed", 'm-tech': "Technic", 'm-small': "Small", 'report': "📊 LEGO Report:\nWeight: {w}g\nEstimated: ~{p} pcs.\nCalculated via: {u}" },
+        ua: { 't-title': "Калькулятор деталей", 't-pieces': "Приблизна кількість", 't-copy': "📋 Копіювати звіт", 'copied': "Скопійовано!", 'm-mix': "Суміш", 'm-tech': "Технік", 'm-small': "Дрібні", 'report': "📊 LEGO Звіт:\nВага: {w}г\nКількість: ~{p} шт.\nРозраховано через: {u}" }
     };
+
+    function setMode(ratio, btn) {
+        currentRatio = ratio;
+        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        calculate();
+    }
 
     function calculate() {
         const w = document.getElementById('weight').value;
         const res = document.getElementById('res');
         const rep = document.getElementById('report-container');
-        const txt = document.getElementById('report-text');
-        
         if (w > 0) {
-            const p = Math.round(w / 1.5);
+            const p = Math.round(w / currentRatio);
             res.innerText = p.toLocaleString();
             const l = localStorage.getItem('bricks_lang') || 'en';
-            // Використовуємо CONFIG.hub_url прямо у звіті
-            txt.innerText = i18n[l].report.replace('{w}', w).replace('{p}', p).replace('{u}', CONFIG.hub_url);
+            document.getElementById('report-text').innerText = i18n[l].report.replace('{w}', w).replace('{p}', p).replace('{u}', CONFIG.hub_url);
             rep.style.display = 'block';
         } else {
             res.innerText = "0";
@@ -90,17 +109,14 @@
 
     function changeLang(l) {
         localStorage.setItem('bricks_lang', l);
-        document.getElementById('t-title').innerText = i18n[l]['t-title'];
-        document.getElementById('t-pieces').innerText = i18n[l]['t-pieces'];
-        document.getElementById('t-copy').innerText = i18n[l]['t-copy'];
-        
-        // Оновлюємо посилання на ідею з урахуванням CONFIG
-        document.getElementById('t-idea').innerHTML = i18n[l]['idea-html'].replace('{s}', CONFIG.suggestion_url);
-        
+        Object.keys(i18n[l]).forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.innerText = i18n[l][id];
+        });
         calculate();
     }
 
-    // Прив'язка статичних посилань з CONFIG при завантаженні
+    // Завантаження конфігу
     document.getElementById('link-hub').href = CONFIG.hub_url;
     document.getElementById('link-support').href = CONFIG.support_url;
     document.getElementById('link-suggest').href = CONFIG.suggestion_url;
