@@ -12,20 +12,15 @@
         nav { background: var(--black); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; }
         nav a { color: white; text-decoration: none; font-weight: bold; font-size: 0.85rem; }
         .container { max-width: 450px; margin: 30px auto; background: white; padding: 30px 20px; border-radius: 25px; border-bottom: 5px solid var(--red); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        
-        /* Кнопки вибору режимів */
         .modes { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
         .mode-btn { background: var(--gray); border: 1px solid #ddd; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; transition: 0.2s; }
         .mode-btn.active { background: var(--red); color: white; border-color: var(--red); }
-
         input { width: 80%; padding: 15px; margin: 15px 0; border: 3px solid #eee; border-radius: 12px; font-size: 1.8rem; text-align: center; font-weight: bold; }
         .result-box { background: var(--black); color: white; padding: 25px; border-radius: 20px; margin: 20px 0; }
         .result { font-size: 3.5rem; font-weight: 900; color: var(--yellow); display: block; line-height: 1; }
-        
         .report-preview { display: none; background: #222; margin-top: 20px; padding: 15px; border-radius: 12px; text-align: left; font-size: 0.85rem; color: #ccc; white-space: pre-line; }
         .btn-copy { background: var(--yellow); color: black; border: none; padding: 12px; border-radius: 8px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 10px; }
         .btn-coffee { display: inline-block; background: var(--yellow); color: black; padding: 14px 28px; border-radius: 12px; text-decoration: none; font-weight: bold; margin-top: 20px; border: 2px solid black; box-shadow: 0 4px 0 black; }
-        
         .feedback { margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px; font-size: 0.85rem; color: #888; }
         .feedback a { color: var(--red); font-weight: bold; text-decoration: underline; }
     </style>
@@ -64,15 +59,33 @@
 
     <a href="#" id="link-support" target="_blank" class="btn-coffee">☕ Support Project</a>
     <div class="feedback">
-        <p id="t-idea">💡 Idea? <a href="#" id="link-suggest" target="_blank">Suggest here</a></p>
+        <p id="t-idea-wrap"></p>
     </div>
 </div>
 
 <script>
     let currentRatio = 1.5;
     const i18n = {
-        en: { 't-title': "Weight Calculator", 't-pieces': "Estimated Pieces", 't-copy': "📋 Copy Report", 'copied': "Copied!", 'm-mix': "Mixed", 'm-tech': "Technic", 'm-small': "Small", 'report': "📊 LEGO Report:\nWeight: {w}g\nEstimated: ~{p} pcs.\nCalculated via: {u}" },
-        ua: { 't-title': "Калькулятор деталей", 't-pieces': "Приблизна кількість", 't-copy': "📋 Копіювати звіт", 'copied': "Скопійовано!", 'm-mix': "Суміш", 'm-tech': "Технік", 'm-small': "Дрібні", 'report': "📊 LEGO Звіт:\nВага: {w}г\nКількість: ~{p} шт.\nРозраховано через: {u}" }
+        en: { 
+            't-title': "Weight Calculator", 
+            't-desc': "Weight in grams (g)",
+            't-pieces': "Estimated Pieces", 
+            't-copy': "📋 Copy Report", 
+            'copied': "Copied!", 
+            'm-mix': "Mixed", 'm-tech': "Technic", 'm-small': "Small", 
+            'idea-html': '💡 Idea for a tool? <a href="{s}" target="_blank" id="link-suggest">Suggest here</a>',
+            'report': "📊 LEGO Report:\nWeight: {w}g\nEstimated: ~{p} pcs.\nCalculated via Bricks Repo Calculator ({u})" 
+        },
+        ua: { 
+            't-title': "Калькулятор деталей", 
+            't-desc': "Вага в грамах (г)",
+            't-pieces': "Приблизна кількість", 
+            't-copy': "📋 Копіювати звіт", 
+            'copied': "Скопійовано!", 
+            'm-mix': "Суміш", 'm-tech': "Технік", 'm-small': "Дрібні", 
+            'idea-html': '💡 Маєте ідею? <a href="{s}" target="_blank" id="link-suggest">Напишіть нам</a>',
+            'report': "📊 LEGO Звіт:\nВага: {w}г\nКількість: ~{p} шт.\nРозраховано через Bricks Repo Calculator ({u})" 
+        }
     };
 
     function setMode(ratio, btn) {
@@ -99,28 +112,37 @@
     }
 
     function copyResult() {
-        navigator.clipboard.writeText(document.getElementById('report-text').innerText).then(() => {
+        const text = document.getElementById('report-text').innerText;
+        navigator.clipboard.writeText(text).then(() => {
             const btn = document.getElementById('t-copy');
             const l = localStorage.getItem('bricks_lang') || 'en';
+            const original = i18n[l]['t-copy'];
             btn.innerText = i18n[l].copied;
-            setTimeout(() => btn.innerText = i18n[l]['t-copy'], 2000);
+            setTimeout(() => { btn.innerText = original; }, 2000);
         });
     }
 
     function changeLang(l) {
         localStorage.setItem('bricks_lang', l);
-        Object.keys(i18n[l]).forEach(id => {
+        
+        // Оновлення всіх текстових елементів по ID
+        const ids = ['t-title', 't-desc', 't-pieces', 't-copy', 'm-mix', 'm-tech', 'm-small'];
+        ids.forEach(id => {
             const el = document.getElementById(id);
             if (el) el.innerText = i18n[l][id];
         });
+
+        // Оновлення блоку ідеї
+        document.getElementById('t-idea-wrap').innerHTML = i18n[l]['idea-html'].replace('{s}', CONFIG.suggestion_url);
+        
         calculate();
     }
 
-    // Завантаження конфігу
+    // Прив'язка посилань з CONFIG
     document.getElementById('link-hub').href = CONFIG.hub_url;
     document.getElementById('link-support').href = CONFIG.support_url;
-    document.getElementById('link-suggest').href = CONFIG.suggestion_url;
 
+    // Старт
     changeLang(localStorage.getItem('bricks_lang') || 'en');
 </script>
 </body>
