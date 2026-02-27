@@ -4,57 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bricks-to-Weight | Bricks-Repo</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧱</text></svg>">
     
+    <script src="config.js"></script>
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧱</text></svg>">
     <style>
         :root { --red: #e3000b; --black: #111; --gray: #f4f4f4; --yellow: #ffdd00; }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--gray); text-align: center; color: var(--black); }
-        
         nav { background: var(--black); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; }
         nav a { color: white; text-decoration: none; font-weight: bold; font-size: 0.85rem; }
-        .lang-btns button { background: none; border: 1px solid #444; color: white; cursor: pointer; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; margin-left: 5px; }
-
-        .container { max-width: 450px; margin: 30px auto; background: white; padding: 30px 20px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-bottom: 5px solid var(--red); }
-        input { width: 70%; padding: 15px; margin: 15px 0; border: 3px solid #eee; border-radius: 12px; font-size: 1.8rem; text-align: center; font-weight: bold; }
-        
-        .modes { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
-        .mode-btn { background: var(--gray); border: 1px solid #ddd; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; transition: 0.2s; }
-        .mode-btn.active { background: var(--red); color: white; border-color: var(--red); }
-
+        .container { max-width: 450px; margin: 30px auto; background: white; padding: 30px 20px; border-radius: 25px; border-bottom: 5px solid var(--red); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        input { width: 80%; padding: 15px; margin: 15px 0; border: 3px solid #eee; border-radius: 12px; font-size: 1.8rem; text-align: center; }
         .result-box { background: var(--black); color: white; padding: 25px; border-radius: 20px; margin: 20px 0; }
-        .result { font-size: 3.5rem; font-weight: 900; color: var(--yellow); display: block; line-height: 1; }
-        .label { font-size: 0.8rem; text-transform: uppercase; opacity: 0.7; letter-spacing: 1px; }
-
-        /* Блок візуального репорту */
-        .report-preview { 
-            display: none; /* Сховано за замовчуванням */
-            background: #222; margin-top: 20px; padding: 15px; border-radius: 12px; 
-            text-align: left; font-size: 0.85rem; color: #ccc; border: 1px solid #333;
-            white-space: pre-line; position: relative;
-        }
-        
-        .btn-copy { 
-            background: var(--yellow); color: black; border: none; padding: 10px; 
-            border-radius: 8px; font-size: 0.8rem; cursor: pointer; margin-top: 10px; 
-            width: 100%; font-weight: bold; transition: 0.2s;
-        }
-        .btn-copy:hover { transform: scale(1.02); }
-
-        .btn-coffee { display: inline-block; background: var(--yellow); color: black; padding: 14px 28px; border-radius: 12px; text-decoration: none; font-weight: bold; margin-top: 25px; border: 2px solid black; box-shadow: 0 4px 0 black; transition: 0.2s; }
-        .btn-coffee:hover { transform: translateY(-2px); box-shadow: 0 6px 0 black; }
-
-        .feedback { margin-top: 30px; font-size: 0.85rem; color: #888; border-top: 1px solid #eee; padding-top: 20px; }
-        .feedback a { 
-            color: var(--red); font-weight: bold; text-decoration: underline !important; 
-            display: inline-block; position: relative; z-index: 10; cursor: pointer;
-        }
+        .result { font-size: 3.5rem; font-weight: 900; color: var(--yellow); display: block; }
+        .report-preview { display: none; background: #222; margin-top: 20px; padding: 15px; border-radius: 12px; text-align: left; font-size: 0.85rem; color: #ccc; white-space: pre-line; }
+        .btn-copy { background: var(--yellow); color: black; border: none; padding: 10px; border-radius: 8px; width: 100%; font-weight: bold; cursor: pointer; }
+        .btn-coffee { display: inline-block; background: var(--yellow); color: black; padding: 14px 28px; border-radius: 12px; text-decoration: none; font-weight: bold; margin-top: 20px; border: 2px solid black; box-shadow: 0 4px 0 black; }
+        .feedback { margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px; font-size: 0.85rem; color: #888; }
+        .feedback a { color: var(--red); font-weight: bold; text-decoration: underline; }
     </style>
 </head>
 <body>
 
 <nav>
-    <a href="https://bricks-repo.github.io/" id="nav-back">⬅ Back to Hub</a>
-    <div class="lang-btns">
+    <a href="#" id="link-hub">⬅ Back to Hub</a>
+    <div>
         <button onclick="changeLang('en')">EN</button>
         <button onclick="changeLang('ua')">UA</button>
     </div>
@@ -62,19 +36,11 @@
 
 <div class="container">
     <h2 id="t-title">Weight Calculator</h2>
-    
-    <div class="modes">
-        <button class="mode-btn active" onclick="setMode(1.5, this)" id="m-mix">Mixed</button>
-        <button class="mode-btn" onclick="setMode(2.0, this)" id="m-tech">Technic</button>
-        <button class="mode-btn" onclick="setMode(0.6, this)" id="m-small">Small</button>
-    </div>
-
     <input type="number" id="weight" placeholder="0" oninput="calculate()">
-    <p id="t-desc">Weight in grams (g)</p>
     
     <div class="result-box">
         <span class="result" id="res">0</span>
-        <span class="label" id="t-pieces">Estimated Pieces</span>
+        <span id="t-pieces">Estimated Pieces</span>
         
         <div id="report-container" class="report-preview">
             <div id="report-text"></div>
@@ -82,118 +48,64 @@
         </div>
     </div>
 
-    <a href="#" target="_blank" class="btn-coffee" id="t-coffee">☕ Support Project</a>
-
+    <a href="#" id="link-support" target="_blank" class="btn-coffee">☕ Support Project</a>
     <div class="feedback">
-        <p id="t-idea">💡 Idea for a tool? <a href="#" target="_blank" id="t-suggest" rel="noopener">Suggest here</a></p>
+        <p id="t-idea">💡 Idea? <a href="#" id="link-suggest" target="_blank">Suggest here</a></p>
     </div>
 </div>
 
 <script>
-    let currentRatio = 1.5;
-    let currentPieces = 0;
-
     const i18n = {
-        en: {
-            'nav-back': "⬅ Back to Bricks-Repo Hub",
-            't-title': "Weight Calculator",
-            't-desc': "Weight in grams (g)",
-            't-pieces': "Estimated Pieces",
-            't-coffee': "☕ Support Project",
-            't-suggest': "Suggest here",
-            'm-mix': "Mixed", 'm-tech': "Technic", 'm-small': "Small",
-            't-idea': "💡 Idea for a tool? ",
-            't-copy': "📋 Copy Report",
-            'copied': "Copied!",
-            'report_tmpl': "📊 LEGO Report:\nWeight: {w}g\nEstimated parts: ~{p} pcs.\nCalculated via Bricks-Repo."
-        },
-        ua: {
-            'nav-back': "⬅ Назад до Хабу",
-            't-title': "Калькулятор деталей",
-            't-desc': "Вага в грамах (г)",
-            't-pieces': "Приблизна кількість",
-            't-coffee': "☕ Підтримати проект",
-            't-suggest': "Напишіть нам",
-            'm-mix': "Суміш", 'm-tech': "Технік", 'm-small': "Дрібні",
-            't-idea': "💡 Маєте ідею? ",
-            't-copy': "📋 Копіювати звіт",
-            'copied': "Скопійовано!",
-            'report_tmpl': "📊 LEGO Звіт:\nВага: {w}г\nОрієнтовна кількість деталей: ~{p} шт.\nРозраховано через Bricks-Repo."
-        }
+        en: { 't-title': "Weight Calculator", 't-pieces': "Estimated Pieces", 't-copy': "📋 Copy Report", 'copied': "Copied!", 'report': "📊 LEGO Report:\nWeight: {w}g\nEstimated: ~{p} pcs.\nCalculated via: {u}", 'idea-html': '💡 Idea for a tool? <a href="{s}" target="_blank">Suggest here</a>' },
+        ua: { 't-title': "Калькулятор деталей", 't-pieces': "Приблизна кількість", 't-copy': "📋 Копіювати звіт", 'copied': "Скопійовано!", 'report': "📊 LEGO Звіт:\nВага: {w}г\nКількість: ~{p} шт.\nРозраховано через: {u}", 'idea-html': '💡 Маєте ідею? <a href="{s}" target="_blank">Напишіть нам</a>' }
     };
 
-    async function syncLinks() {
-        try {
-            const registryUrl = 'https://bricks-repo.github.io/hub-registry.json'; 
-            const response = await fetch(registryUrl);
-            const data = await response.json();
-            
-            if (data.settings) {
-                const supportBtn = document.getElementById('t-coffee');
-                const suggestBtn = document.getElementById('t-suggest');
-
-                if (supportBtn && data.settings.support_url) supportBtn.href = data.settings.support_url;
-                if (suggestBtn && data.settings.suggestion_url) suggestBtn.href = data.settings.suggestion_url;
-            }
-        } catch (e) {
-            console.error("Hub Sync failed:", e);
-        }
-    }
-
-    function setMode(ratio, btn) {
-        currentRatio = ratio;
-        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        calculate();
-    }
-
     function calculate() {
-        const weight = document.getElementById('weight').value;
-        const reportContainer = document.getElementById('report-container');
-        const reportTextEl = document.getElementById('report-text');
-
-        if (weight > 0) {
-            currentPieces = Math.round(weight / currentRatio);
-            document.getElementById('res').innerText = currentPieces.toLocaleString();
-            
-            // Оновлюємо та показуємо репорт
-            const lang = localStorage.getItem('bricks_lang') || 'en';
-            reportTextEl.innerText = i18n[lang]['report_tmpl'].replace('{w}', weight).replace('{p}', currentPieces);
-            reportContainer.style.display = 'block';
+        const w = document.getElementById('weight').value;
+        const res = document.getElementById('res');
+        const rep = document.getElementById('report-container');
+        const txt = document.getElementById('report-text');
+        
+        if (w > 0) {
+            const p = Math.round(w / 1.5);
+            res.innerText = p.toLocaleString();
+            const l = localStorage.getItem('bricks_lang') || 'en';
+            // Використовуємо CONFIG.hub_url прямо у звіті
+            txt.innerText = i18n[l].report.replace('{w}', w).replace('{p}', p).replace('{u}', CONFIG.hub_url);
+            rep.style.display = 'block';
         } else {
-            document.getElementById('res').innerText = "0";
-            reportContainer.style.display = 'none';
+            res.innerText = "0";
+            rep.style.display = 'none';
         }
     }
 
     function copyResult() {
-        const text = document.getElementById('report-text').innerText;
-        navigator.clipboard.writeText(text).then(() => {
+        navigator.clipboard.writeText(document.getElementById('report-text').innerText).then(() => {
             const btn = document.getElementById('t-copy');
-            const lang = localStorage.getItem('bricks_lang') || 'en';
-            const originalText = i18n[lang]['t-copy'];
-            btn.innerText = i18n[lang]['copied'];
-            setTimeout(() => { btn.innerText = originalText; }, 2000);
+            const l = localStorage.getItem('bricks_lang') || 'en';
+            btn.innerText = i18n[l].copied;
+            setTimeout(() => btn.innerText = i18n[l]['t-copy'], 2000);
         });
     }
 
-    function changeLang(lang) {
-        localStorage.setItem('bricks_lang', lang);
-        applyLang(lang);
-    }
-
-    function applyLang(lang) {
-        for (let id in i18n[lang]) {
-            const el = document.getElementById(id);
-            if (el) el.innerText = i18n[lang][id];
-        }
+    function changeLang(l) {
+        localStorage.setItem('bricks_lang', l);
+        document.getElementById('t-title').innerText = i18n[l]['t-title'];
+        document.getElementById('t-pieces').innerText = i18n[l]['t-pieces'];
+        document.getElementById('t-copy').innerText = i18n[l]['t-copy'];
+        
+        // Оновлюємо посилання на ідею з урахуванням CONFIG
+        document.getElementById('t-idea').innerHTML = i18n[l]['idea-html'].replace('{s}', CONFIG.suggestion_url);
+        
         calculate();
     }
 
-    const savedLang = localStorage.getItem('bricks_lang') || (navigator.language.includes('uk') ? 'ua' : 'en');
-    applyLang(savedLang);
-    syncLinks();
-</script>
+    // Прив'язка статичних посилань з CONFIG при завантаженні
+    document.getElementById('link-hub').href = CONFIG.hub_url;
+    document.getElementById('link-support').href = CONFIG.support_url;
+    document.getElementById('link-suggest').href = CONFIG.suggestion_url;
 
+    changeLang(localStorage.getItem('bricks_lang') || 'en');
+</script>
 </body>
 </html>
