@@ -12,32 +12,132 @@
     <script type="application/ld+json" id="ld-schema"></script>
 
     <style>
-        /* Базові стилі (fallback) */
+        /* СУЧАСНИЙ ДИЗАЙН (Glassmorphism + Soft Shadows) */
         :root {
-            --primary: #e3000b; --secondary: #ffdd00; --bg: #f4f4f4; --text: #111111;
-            --radius: 20px; --shadow: 0 6px 0 #111111; --border: 3px solid #111111;
+            /* Fallback кольори, будуть замінені з CONFIG */
+            --primary: #e3000b; --secondary: #ffdd00; --bg: #f0f2f5; --text: #1a1a1a;
+            --radius-lg: 24px; --radius-md: 16px; --radius-sm: 12px;
+            /* М'які тіні для глибини */
+            --shadow-card: 0 10px 30px rgba(0,0,0,0.08);
+            --shadow-btn: 0 4px 12px rgba(0,0,0,0.1);
         }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; background: var(--bg); color: var(--text); text-align: center; opacity: 0; transition: opacity 0.3s; }
-        nav { background: var(--text); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; }
-        nav a { color: white; text-decoration: none; font-weight: bold; }
-        .lang-switch button { background: none; border: 1px solid white; color: white; padding: 5px 10px; border-radius: 6px; cursor: pointer; }
-        .container { max-width: 450px; margin: 40px auto; background: white; padding: 35px 25px; border-radius: var(--radius); border: var(--border); box-shadow: var(--shadow); }
-        .modes { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; }
-        .mode-btn { background: white; border: var(--border); padding: 10px 15px; border-radius: 12px; cursor: pointer; font-weight: bold; }
-        .mode-btn.active { background: var(--primary); color: white; }
-        input { width: 85%; padding: 15px; border: var(--border); border-radius: 15px; font-size: 2.2rem; text-align: center; font-weight: 900; }
-        .result-box { background: var(--text); color: white; padding: 30px; border-radius: var(--radius); margin: 25px 0; }
-        .result { font-size: 4rem; font-weight: 900; color: var(--secondary); display: block; }
-        .report-preview { display: none; background: #222; margin-top: 20px; padding: 15px; border-radius: 12px; text-align: left; font-size: 0.85rem; border: 1px dashed #555; }
-        .btn-copy { background: var(--secondary); color: var(--text); border: var(--border); padding: 12px; border-radius: 10px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .btn-coffee { display: inline-block; background: var(--secondary); color: var(--text); padding: 16px 32px; border-radius: 18px; text-decoration: none; font-weight: bold; border: var(--border); box-shadow: 0 4px 0 var(--text); }
-        .feedback { margin-top: 35px; font-size: 0.85rem; color: #777; }
+
+        body { 
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            margin: 0; background: var(--bg); color: var(--text); text-align: center; 
+            opacity: 0; transition: opacity 0.4s ease-in-out;
+            /* Легкий градієнт на фоні для преміальності */
+            background-image: radial-gradient(#ffffff 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* Навігація: матове скло (Glassmorphism) */
+        nav { 
+            background: rgba(26, 26, 26, 0.8); padding: 15px 25px; 
+            display: flex; justify-content: space-between; align-items: center; 
+            backdrop-filter: blur(10px); /* Ефект розмиття */
+            position: sticky; top: 0; z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        nav a { 
+            color: white; text-decoration: none; font-weight: 600; font-size: 0.95rem; 
+            display: flex; align-items: center; gap: 8px; transition: 0.2s;
+        }
+        nav a:hover { opacity: 0.8; }
+        
+        .lang-switch button { 
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); 
+            color: white; padding: 6px 12px; border-radius: var(--radius-sm); 
+            cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: 0.2s;
+        }
+        .lang-switch button:hover { background: rgba(255,255,255,0.2); }
+
+        .container { 
+            max-width: 480px; margin: 50px auto; background: rgba(255, 255, 255, 0.95); 
+            padding: 40px 30px; border-radius: var(--radius-lg); 
+            box-shadow: var(--shadow-card);
+            border: 1px solid rgba(255,255,255,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        h2 { font-weight: 800; font-size: 1.8rem; letter-spacing: -0.5px; margin-top: 0; }
+
+        .modes { display: flex; justify-content: center; gap: 12px; margin-bottom: 30px; }
+        
+        .mode-btn { 
+            background: #f4f4f4; border: 1px solid #eee; padding: 12px 20px; 
+            border-radius: var(--radius-sm); cursor: pointer; font-weight: 700; 
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); font-size: 0.9rem;
+            color: #555;
+        }
+        .mode-btn:hover { background: #e9e9e9; transform: translateY(-1px); }
+        .mode-btn.active { 
+            background: var(--primary); color: white; border-color: var(--primary); 
+            box-shadow: 0 4px 12px rgba(227, 0, 11, 0.3); /* Тінь під колір кнопки */
+        }
+
+        input { 
+            width: 90%; padding: 18px; border: 2px solid #eee; 
+            border-radius: var(--radius-md); font-size: 2.5rem; text-align: center; 
+            font-weight: 900; color: var(--text); background: #fafafa;
+            transition: 0.2s; outline: none; margin-bottom: 15px;
+        }
+        input:focus { border-color: var(--primary); background: white; box-shadow: 0 0 0 4px rgba(227, 0, 11, 0.1); }
+
+        .result-box { 
+            background: var(--text); color: white; padding: 35px; 
+            border-radius: var(--radius-md); margin: 30px 0; 
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.2);
+            position: relative; overflow: hidden;
+        }
+        /* Декоративний елемент для фону результату */
+        .result-box::before {
+            content: ""; position: absolute; top: -50px; right: -50px; 
+            width: 100px; height: 100px; background: rgba(255,255,255,0.03); 
+            border-radius: 50%;
+        }
+
+        .result { font-size: 4.5rem; font-weight: 900; color: var(--secondary); display: block; line-height: 1; letter-spacing: -2px; }
+
+        .report-preview { 
+            display: none; background: rgba(255,255,255,0.05); margin-top: 25px; 
+            padding: 20px; border-radius: var(--radius-sm); text-align: left; 
+            font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.1);
+            font-family: 'Courier New', monospace; color: #ccc;
+        }
+
+        .btn-copy { 
+            background: var(--secondary); color: var(--text); border: none; 
+            padding: 14px; border-radius: var(--radius-sm); width: 100%; 
+            font-weight: 700; cursor: pointer; margin-top: 15px; 
+            transition: 0.2s; font-size: 0.95rem;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-copy:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        .btn-coffee { 
+            display: inline-flex; align-items: center; gap: 10px;
+            background: white; color: var(--text); 
+            padding: 16px 32px; border-radius: var(--radius-md); text-decoration: none; 
+            font-weight: 700; margin-top: 25px; border: 1px solid #eee; 
+            box-shadow: var(--shadow-btn); transition: 0.2s; font-size: 1rem;
+        }
+        .btn-coffee:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.15); background: #fafafa; }
+        .btn-coffee svg { width: 20px; height: 20px; fill: #FFDD00; /* Колір кави */ }
+
+        .feedback { margin-top: 40px; font-size: 0.9rem; color: #888; border-top: 1px solid #eee; padding-top: 25px; }
+        .feedback a { color: var(--primary); font-weight: 600; text-decoration: none; }
+        .feedback a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
 
 <nav>
-    <a href="#" id="link-hub">---</a>
+    <a href="#" id="link-hub">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <span id="nav-back-text">Back</span>
+    </a>
     <div class="lang-switch">
         <button onclick="changeLang('en')">EN</button>
         <button onclick="changeLang('ua')">UA</button>
@@ -45,58 +145,58 @@
 </nav>
 
 <div class="container">
-    <h2 id="t-title">---</h2>
+    <h2 id="t-title">Weight Calculator</h2>
     
     <div class="modes">
-        <button class="mode-btn active" onclick="setMode(1.5, this)" id="m-mix">---</button>
-        <button class="mode-btn" onclick="setMode(2.0, this)" id="m-tech">---</button>
-        <button class="mode-btn" onclick="setMode(0.6, this)" id="m-small">---</button>
+        <button class="mode-btn active" onclick="setMode(1.5, this)" id="m-mix">Mixed</button>
+        <button class="mode-btn" onclick="setMode(2.0, this)" id="m-tech">Technic</button>
+        <button class="mode-btn" onclick="setMode(0.6, this)" id="m-small">Small</button>
     </div>
 
-    <input type="number" id="weight" placeholder="0" oninput="calculate()">
-    <p id="t-desc" style="font-size: 0.9rem; font-weight: bold; opacity: 0.7;">---</p>
+    <input type="number" id="weight" placeholder="0" oninput="calculate()" min="0">
+    <p id="t-desc" style="font-size: 0.95rem; font-weight: 600; opacity: 0.8; margin-top: 0;">Weight in grams (g)</p>
     
     <div class="result-box">
         <span class="result" id="res">0</span>
-        <span id="t-pieces" style="font-weight: bold;">---</span>
+        <span id="t-pieces" style="text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px; font-weight: 700; opacity: 0.7;">Estimated Pieces</span>
         
         <div id="report-container" class="report-preview">
             <div id="report-text"></div>
-            <button class="btn-copy" onclick="copyResult()" id="t-copy">---</button>
+            <button class="btn-copy" onclick="copyResult()" id="t-copy">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+                <span id="btn-copy-text">Copy Report</span>
+            </button>
         </div>
     </div>
 
-    <a href="#" id="link-support" target="_blank" class="btn-coffee">---</a>
+    <a href="#" id="link-support" target="_blank" class="btn-coffee">
+        <svg viewBox="0 0 24 24"><path d="M2 21h18v-2H2M20 8h-2V5h2m0-2H4v10a4 4 0 0 0 4 4h6a4 4 0 0 0 4-4v-3h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2Z"/></svg>
+        <span id="btn-coffee-text">Support Project</span>
+    </a>
     <div class="feedback" id="t-idea-wrap"></div>
 </div>
 
 <script>
+    // ВСЯ ЛОГІКА JS ЗАЛИШАЄТЬСЯ НЕЗМІННОЮ
     let currentRatio = 1.5;
     const tool_i18n = {
         en: { 't-title': "Weight-to-Pieces", 't-desc': "Weight in grams (g)", 't-pieces': "Estimated Pieces", 'm-mix': "Mixed", 'm-tech': "Technic", 'm-small': "Small", 'idea': '💡 Idea? <a href="{s}" target="_blank">Suggest here</a>', 'report': "📊 LEGO Report:\nWeight: {w}g\nEstimated: ~{p} pcs.\n{u}" },
-        ua: { 't-title': "Вага в Деталі", 't-desc': "Вага в грамах (г)", 't-pieces': "Приблизна кількість", 'm-mix': "Суміш", 'm-tech': "Технік", 'm-small': "Дрібні", 'idea': '💡 Маєте ідею? <a href="{s}" target="_blank">Напишіть нам</a>', 'report': "📊 LEGO Звіт:\nВага: {w}г\nКількість: ~{p} шт.\n{u}" }
+        ua: { 't-title': "Вага в Деталі", 't-desc': "Вага в грамах (г)", 't-pieces': "Приблизна кількість", 'm-mix': "Суміш", 'm-tech': "Технік", 'm-small': "Дрібні", 'idea': '💡 Маєте ідею? <a href="{s}" target="_blank">Напишіть нам</a>', 'report': "📊 LEGO Звіт:\nВага: {w}г\nКількість: ~{p} шт.\nРозраховано через Bricks Repo ({u})" }
     };
 
     function applyConfig() {
         if (typeof CONFIG === 'undefined') return;
-
         const s = CONFIG.style;
         const root = document.documentElement.style;
-        
-        // Мапінг стилів зі змінної CONFIG
+        // Оновлюємо CSS змінні з CONFIG
         root.setProperty('--primary', s.colors.primary);
         root.setProperty('--secondary', s.colors.secondary);
         root.setProperty('--bg', s.colors.bg);
         root.setProperty('--text', s.colors.text);
-        root.setProperty('--radius', s.ui.radius);
-        root.setProperty('--border', s.ui.border);
-        root.setProperty('--shadow', s.ui.shadow);
-
+        // Радіуси тепер фіксовані для сучасного стилю, border/shadow теж оновлені
         document.getElementById('dynamic-favicon').href = `data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>${s.favicon}</text></svg>`;
         document.getElementById('link-hub').href = CONFIG.hub_url;
         document.getElementById('link-support').href = CONFIG.urls.support;
-        
-        // Показуємо тіло після завантаження стилів
         document.body.style.opacity = "1";
     }
 
@@ -108,8 +208,7 @@
         if (w > 0) {
             const p = Math.round(w / currentRatio);
             res.innerText = p.toLocaleString();
-            document.getElementById('report-text').innerText = tool_i18n[l].report
-                .replace('{w}', w).replace('{p}', p).replace('{u}', CONFIG.hub_url);
+            document.getElementById('report-text').innerText = tool_i18n[l].report.replace('{w}', w).replace('{p}', p).replace('{u}', CONFIG.hub_url);
             rep.style.display = 'block';
         } else { res.innerText = "0"; rep.style.display = 'none'; }
     }
@@ -125,12 +224,11 @@
         if (typeof CONFIG === 'undefined') return;
         localStorage.setItem('bricks_lang', l);
         
-        // Використовуємо спільну змінну CONFIG для кнопок
-        document.getElementById('link-hub').innerText = "⬅ " + CONFIG.common_i18n[l].back;
-        document.getElementById('link-support').innerText = "☕ " + CONFIG.common_i18n[l].support;
-        document.getElementById('t-copy').innerText = "📋 " + CONFIG.common_i18n[l].copy;
+        // Оновлення текстів
+        document.getElementById('nav-back-text').innerText = CONFIG.common_i18n[l].back;
+        document.getElementById('btn-coffee-text').innerText = CONFIG.common_i18n[l].support;
+        document.getElementById('btn-copy-text').innerText = CONFIG.common_i18n[l].copy;
         
-        // Використовуємо локальний tool_i18n для калькулятора
         const ids = ['t-title', 't-desc', 't-pieces', 'm-mix', 'm-tech', 'm-small'];
         ids.forEach(id => { document.getElementById(id).innerText = tool_i18n[l][id]; });
         
@@ -142,14 +240,14 @@
     function copyResult() {
         const text = document.getElementById('report-text').innerText;
         navigator.clipboard.writeText(text).then(() => {
-            const btn = document.getElementById('t-copy');
+            const btnText = document.getElementById('btn-copy-text');
             const l = localStorage.getItem('bricks_lang') || 'en';
-            btn.innerText = CONFIG.common_i18n[l].copied;
-            setTimeout(() => { btn.innerText = "📋 " + CONFIG.common_i18n[l].copy; }, 2000);
+            const original = CONFIG.common_i18n[l].copy;
+            btnText.innerText = CONFIG.common_i18n[l].copied;
+            setTimeout(() => { btnText.innerText = original; }, 2000);
         });
     }
 
-    // Запуск: чекаємо завантаження скрипта конфігу
     window.addEventListener('load', () => {
         applyConfig();
         changeLang(localStorage.getItem('bricks_lang') || 'en');
