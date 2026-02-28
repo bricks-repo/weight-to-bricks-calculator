@@ -11,34 +11,50 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧱</text></svg>">
 
     <style>
-        :root {
-            --primary: #e3000b; --secondary: #ffdd00; --bg: #f0f2f5; --text: #1a1a1a;
-            --radius-lg: 24px; --radius-md: 16px; --shadow-card: 0 10px 30px rgba(0,0,0,0.08);
+        :root { 
+            --primary: #e3000b; --secondary: #ffdd00; --bg: #f0f2f5; --text: #1a1a1a; 
+            --radius-lg: 24px; --radius-md: 16px; --shadow-card: 0 10px 30px rgba(0,0,0,0.08); 
         }
         body { font-family: system-ui, -apple-system, sans-serif; margin: 0; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
+        
+        /* Навігація */
         nav { background: #1a1a1a; padding: 12px 25px; display: flex; justify-content: space-between; align-items: center; min-height: 50px; }
         nav a, .lang-switch button { color: white; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 8px; }
         .lang-switch button { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; margin-left: 5px; }
+        
+        /* Контент */
         main { max-width: 480px; margin: 40px auto; background: #ffffff; padding: 30px; border-radius: var(--radius-lg); box-shadow: var(--shadow-card); text-align: center; }
         h1 { font-size: 1.6rem; font-weight: 800; margin: 0 0 25px 0; line-height: 1.2; }
+        
+        /* Режими */
         .modes { display: flex; justify-content: center; gap: 8px; margin-bottom: 25px; }
         .mode-btn { flex: 1; background: #f4f4f4; border: 1px solid #eee; padding: 12px 8px; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: 0.2s; }
         .mode-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        
+        /* Ввід та Результат */
         input { width: 100%; box-sizing: border-box; padding: 15px; border: 2px solid #eee; border-radius: var(--radius-md); font-size: 2.5rem; text-align: center; font-weight: 900; background: #fafafa; margin-bottom: 10px; outline: none; }
         input:focus { border-color: var(--primary); background: #fff; }
         .result-box { background: #1a1a1a; color: white; padding: 30px; border-radius: var(--radius-md); margin: 25px 0; min-height: 120px; }
         .result { font-size: 4rem; font-weight: 900; color: var(--secondary); display: block; line-height: 1; }
+        
+        /* Звіт та Копіювання */
         .report-preview { display: none; background: rgba(255,255,255,0.05); margin-top: 20px; padding: 15px; border-radius: 10px; text-align: left; font-size: 0.85rem; border: 1px solid rgba(255,255,255,0.1); }
         .btn-copy { background: var(--secondary); color: #1a1a1a; border: none; padding: 14px; border-radius: 10px; width: 100%; font-weight: 700; cursor: pointer; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        
+        /* Кнопка Сапорту */
         .btn-coffee { display: inline-flex; align-items: center; gap: 8px; background: #ffffff; padding: 14px 25px; border-radius: var(--radius-md); text-decoration: none; color: #1a1a1a; font-weight: 700; border: 1px solid #eee; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        
+        /* Футер */
         footer { margin-top: 50px; padding: 20px 0; border-top: 1px dashed #ddd; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-        footer a { display: flex; align-items: center; gap: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+        .idea-block { display: flex; align-items: center; font-weight: 600; font-size: 0.9rem; }
+        .idea-block a { text-decoration: none; color: var(--primary); font-weight: 700; margin-left: 4px; }
+        .idea-svg { width: 20px; height: 20px; display: block; }
     </style>
 </head>
 <body>
 
 <nav>
-    <a href="/" id="link-hub">⬅ <span id="nav_back">Bricks-Repo Hub</span></a>
+    <a href="/" id="link-hub">⬅ <span id="back">Hub</span></a>
     <div class="lang-switch" id="lang-selectors"></div>
 </nav>
 
@@ -62,45 +78,36 @@
             <div id="report_text" style="white-space: pre-line; margin-bottom: 10px; font-family: monospace;"></div>
             <button class="btn-copy" onclick="copyResult()">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                <span id="btn_copy">Copy Report</span>
+                <span id="copy">Copy</span>
             </button>
         </div>
     </section>
 
-    <a href="#" id="link-support" class="btn-coffee"><span id="btn_support">Support Project</span></a>
+    <a href="#" id="link-support" class="btn-coffee"><span id="support">Support Project</span></a>
 
     <footer>
-        <a href="#" id="f-link">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #ffdd00; fill: rgba(255, 221, 0, 0.1);">
-                <path d="M9 18h6m-3-15a7 7 0 0 0-5.36 11.5c.59.69.86 1.7.86 2.5v1a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1v-1c0-.8.27-1.81.86-2.5A7 7 0 0 0 12 3z"></path>
-            </svg>
-            <span id="f_idea" style="color: var(--primary);">Have an Idea? Write to us</span>
-        </a>
+        <div class="idea-block">
+            <div id="icon-idea"></div>
+            <span id="f_idea_q"> Idea?</span>
+            <a href="#" id="f-link-mailto"><span id="f_idea_a">Write to us</span></a>
+        </div>
         <div id="f_copy" style="font-size: 0.7rem; color: #999; text-transform: uppercase; letter-spacing: 1px;">© 2026 PROFITREPO</div>
     </footer>
 </main>
 
 <script>
     let currentRatio = 1.5;
-    const toolID = "weight-to-pieces-calculator";
+    const toolID = "bricks-weight-calculator";
 
     const tool_i18n = {
         en: { 
-            t_title: "Convert LEGO Bricks Weight to Pieces", 
-            t_desc: "Weight in grams (g)", 
-            t_pieces: "Estimated Pieces", 
-            m_mix: "Mixed Bricks", 
-            m_tech: "Technic Parts", 
-            m_small: "Small Parts", 
+            t_title: "Convert LEGO Bricks Weight to Pieces", t_desc: "Weight in grams (g)", t_pieces: "Estimated Pieces", 
+            m_mix: "Mixed Bricks", m_tech: "Technic Parts", m_small: "Small Parts", 
             report: "📊 LEGO Report:\nWeight: {w}g\nEst: ~{p} pcs.\n{u}" 
         },
         ua: { 
-            t_title: "Перевести вагу деталей LEGO в кількість", 
-            t_desc: "Вага в грамах (г)", 
-            t_pieces: "Приблизна кількість деталей", 
-            m_mix: "Суміш деталей", 
-            m_tech: "Technic деталі", 
-            m_small: "Дрібні деталі", 
+            t_title: "Перевести вагу деталей LEGO в кількість", t_desc: "Вага в грамах (г)", t_pieces: "Приблизна кількість деталей", 
+            m_mix: "Суміш деталей", m_tech: "Technic деталі", m_small: "Дрібні деталі", 
             report: "📊 LEGO Звіт:\nВага: {w}г\nК-сть: ~{p} шт.\n{u}" 
         }
     };
@@ -118,6 +125,10 @@
         document.getElementById('link-support').href = CONFIG.urls.support;
         document.getElementById('f_copy').innerText = `© 2026 ${CONFIG.branch_name || 'PROFITREPO'}`;
 
+        if (CONFIG.icons?.idea) {
+            document.getElementById('icon-idea').innerHTML = CONFIG.icons.idea;
+        }
+
         const langContainer = document.getElementById('lang-selectors');
         langContainer.innerHTML = Object.keys(CONFIG.common_i18n).map(lang => 
             `<button onclick="changeLang('${lang}')">${lang.toUpperCase()}</button>`
@@ -129,45 +140,50 @@
         const hasConfig = typeof CONFIG !== 'undefined';
         const translations = { ...(hasConfig ? CONFIG.common_i18n[l] : {}), ...tool_i18n[l] };
 
+        // Оновлення UI
         Object.keys(translations).forEach(key => {
             const el = document.getElementById(key);
             if (el) el.innerText = translations[key];
         });
 
-        // ПРАВИЛЬНИЙ КЛЮЧ: ideas_email
-        const email = hasConfig ? CONFIG.ideas_email : 'myprofitrepo+ideas+bricks@gmail.com';
-        document.getElementById('f-link').href = `mailto:${email}?subject=${encodeURIComponent('Idea: ' + toolID)}`;
+        // Mailto логіка
+        const email = hasConfig ? CONFIG.ideas_email : 'myprofitrepo@gmail.com';
+        const mailUrl = `mailto:${email}?subject=${encodeURIComponent('Idea: ' + toolID)}`;
+        document.getElementById('f-link-mailto').setAttribute('href', mailUrl);
         
-        // Синхронізація заголовку вкладки
         document.title = translations.t_title + (hasConfig ? ` | ${CONFIG.org_name}` : "");
         
-        if (hasConfig) {
-            const schema = {
-                "@context": "https://schema.org",
-                "@type": "WebApplication",
-                "name": translations.t_title,
-                "url": window.location.href,
-                "author": { "@type": "Organization", "name": CONFIG.org_name },
-                "description": translations.t_desc,
-                "inLanguage": l
-            };
-            document.getElementById('ld-schema').text = JSON.stringify(schema);
-        }
+        // Schema.org
+        const schema = {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": translations.t_title,
+            "url": window.location.href,
+            "applicationCategory": "UtilityApplication",
+            "author": { "@type": "Organization", "name": hasConfig ? CONFIG.org_name : "ProfitRepo" },
+            "description": translations.t_desc,
+            "inLanguage": l
+        };
+        document.getElementById('ld-schema').text = JSON.stringify(schema);
+
         calculate();
     }
 
     function calculate() {
         const w = document.getElementById('weight').value;
         const l = localStorage.getItem('bricks_lang') || 'en';
+        const res = document.getElementById('res');
+        const rep = document.getElementById('report-container');
+        
         if (w > 0) {
             const p = Math.round(w / currentRatio);
-            document.getElementById('res').innerText = p.toLocaleString();
+            res.innerText = p.toLocaleString();
             const u = typeof CONFIG !== 'undefined' ? CONFIG.hub_url : window.location.origin;
             document.getElementById('report_text').innerText = (tool_i18n[l] || tool_i18n['en']).report.replace('{w}', w).replace('{p}', p).replace('{u}', u);
-            document.getElementById('report-container').style.display = 'block';
+            rep.style.display = 'block';
         } else { 
-            document.getElementById('res').innerText = "0"; 
-            document.getElementById('report-container').style.display = 'none'; 
+            res.innerText = "0"; 
+            rep.style.display = 'none'; 
         }
     }
 
@@ -183,6 +199,7 @@
         const l = localStorage.getItem('bricks_lang') || 'en';
         const btnSpan = document.querySelector('.btn-copy span');
         const originalText = btnSpan.innerText;
+        
         navigator.clipboard.writeText(text).then(() => {
             btnSpan.innerText = (typeof CONFIG !== 'undefined' && CONFIG.common_i18n[l].copied) ? CONFIG.common_i18n[l].copied : "Copied!";
             setTimeout(() => btnSpan.innerText = originalText, 2000);
