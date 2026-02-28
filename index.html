@@ -29,8 +29,8 @@
             min-height: 50px;
         }
 
-        nav a, .lang-switch button { color: white; font-weight: 600; text-decoration: none; }
-        .lang-switch button { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+        nav a, .lang-switch button { color: white; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .lang-switch button { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 0.85rem; }
         .lang-switch button:hover { background: rgba(255,255,255,0.2); }
 
         main { 
@@ -70,6 +70,7 @@
             background: var(--secondary); color: #1a1a1a; border: none; padding: 14px; 
             border-radius: 10px; width: 100%; font-weight: 700; cursor: pointer; margin-top: 10px;
             display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s;
+            text-decoration: none;
         }
         .btn-copy:active { transform: scale(0.98); }
 
@@ -77,9 +78,12 @@
             display: inline-flex; align-items: center; gap: 8px; background: #ffffff; 
             padding: 14px 25px; border-radius: var(--radius-md); text-decoration: none; 
             color: #1a1a1a; font-weight: 700; border: 1px solid #eee; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            transition: 0.2s;
+            transition: 0.2s; margin-bottom: 20px;
         }
         .btn-coffee:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
+
+        .suggestion-area { margin-top: 40px; border-top: 1px dashed #ddd; padding-top: 30px; }
+        .suggestion-area p { font-size: 0.85rem; color: #666; margin-bottom: 20px; }
 
         footer { margin-top: 30px; font-size: 0.85rem; color: #777; border-top: 1px solid #eee; padding-top: 20px; }
         footer a { color: var(--primary); font-weight: 600; text-decoration: none; }
@@ -88,7 +92,7 @@
 <body>
 
 <nav aria-label="Main Navigation">
-    <a href="/" id="link-hub">⬅ <span id="nav-back-text">Back</span></a>
+    <a href="/" id="link-hub">⬅ <span id="nav-back-text">Bricks-Repo Hub</span></a>
     <div class="lang-switch">
         <button onclick="changeLang('en')">EN</button>
         <button onclick="changeLang('ua')">UA</button>
@@ -113,7 +117,7 @@
         
         <div id="report-container" class="report-preview">
             <div id="report-text" style="white-space: pre-line; margin-bottom: 10px; font-family: monospace;"></div>
-            <button class="btn-copy" onclick="copyResult()" id="t-copy">
+            <button class="btn-copy" onclick="copyResult()" id="btn-copy">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                 <span id="btn-copy-text">Copy Report</span>
             </button>
@@ -124,11 +128,21 @@
         <span id="btn-coffee-text">Support Project</span>
     </a>
 
+    <section class="suggestion-area">
+        <h3 id="f-title" style="font-size: 1.1rem; margin-bottom: 10px;">Got an Idea?</h3>
+        <p id="f-desc">Help us build the best LEGO tools ecosystem.</p>
+        <a href="mailto:architect@profitrepo.com" id="f-link" class="btn-copy" style="background: #1a1a1a; color: white;">
+            <span id="f-send">Send Suggestion</span>
+        </a>
+    </section>
+
     <footer id="t-idea-wrap"></footer>
 </main>
 
 <script>
     let currentRatio = 1.5;
+    
+    // Специфічні тексти тільки для цього інструменту
     const tool_i18n = {
         en: { 
             't-title': "Convert LEGO Bricks Weight to Pieces", 
@@ -160,14 +174,16 @@
         root.setProperty('--secondary', s.colors.secondary);
         root.setProperty('--bg', s.colors.bg);
         root.setProperty('--text', s.colors.text);
+        
         document.getElementById('link-hub').href = CONFIG.hub_url;
         document.getElementById('link-support').href = CONFIG.urls.support;
 
         const schema = {
             "@context": "https://schema.org",
-            "@type": CONFIG.seo.category,
+            "@type": "WebApplication",
             "name": "Convert LEGO Bricks Weight to Pieces",
             "url": window.location.href,
+            "applicationCategory": "Utility",
             "author": { "@type": "Organization", "name": CONFIG.org_name }
         };
         const script = document.getElementById('ld-schema');
@@ -198,16 +214,28 @@
     function changeLang(l) {
         localStorage.setItem('bricks_lang', l);
         const hasConfig = typeof CONFIG !== 'undefined';
+        const common = hasConfig ? CONFIG.common_i18n[l] : null;
+
+        // 1. Оновлення спільних елементів з CONFIG
+        document.getElementById('nav-back-text').innerText = common ? common.back : (l === 'ua' ? 'Bricks-Repo Хаб' : 'Bricks-Repo Hub');
+        document.getElementById('btn-coffee-text').innerText = common ? common.support : (l === 'ua' ? 'Підтримати' : 'Support');
+        document.getElementById('btn-copy-text').innerText = common ? common.copy : (l === 'ua' ? 'Копіювати' : 'Copy');
         
-        document.getElementById('nav-back-text').innerText = hasConfig ? CONFIG.common_i18n[l].back : (l === 'ua' ? 'Назад' : 'Back');
-        document.getElementById('btn-coffee-text').innerText = hasConfig ? CONFIG.common_i18n[l].support : (l === 'ua' ? 'Підтримати' : 'Support');
-        document.getElementById('btn-copy-text').innerText = hasConfig ? CONFIG.common_i18n[l].copy : (l === 'ua' ? 'Копіювати' : 'Copy');
-        
-        const ids = ['t-title', 't-desc', 't-pieces', 'm-mix', 'm-tech', 'm-small'];
-        ids.forEach(id => { 
+        document.getElementById('f-title').innerText = common ? common.f_title : (l === 'ua' ? 'Запропонувати ідею' : 'Suggest an Idea');
+        document.getElementById('f-desc').innerText = common ? common.f_desc : (l === 'ua' ? 'Напишіть, якого інструменту LEGO вам не вистачає.' : 'Tell us which LEGO tool you need next.');
+        document.getElementById('f-send').innerText = common ? common.f_send : (l === 'ua' ? 'Написати Архітектору' : 'Write to Architect');
+
+        // 2. Оновлення специфічних текстів інструменту
+        const toolIds = ['t-title', 't-desc', 't-pieces', 'm-mix', 'm-tech', 'm-small'];
+        toolIds.forEach(id => { 
             const el = document.getElementById(id);
             if (el) el.innerText = tool_i18n[l][id]; 
         });
+
+        // 3. Mailto Динаміка
+        const email = hasConfig ? CONFIG.org_email : 'architect@profitrepo.com';
+        const subject = l === 'ua' ? 'Ідея для Bricks-Repo (Weight-to-Pieces)' : 'Idea for Bricks-Repo (Weight-to-Pieces)';
+        document.getElementById('f-link').href = `mailto:${email}?subject=${encodeURIComponent(subject)}`;
         
         const suffix = hasConfig ? ` | ${CONFIG.org_name}` : " | Bricks-Repo";
         document.title = tool_i18n[l]['t-title'] + suffix;
@@ -222,40 +250,26 @@
     function copyResult() {
         const textElement = document.getElementById('report-text');
         if (!textElement) return;
-
         const textToCopy = textElement.innerText;
         const l = localStorage.getItem('bricks_lang') || 'en';
         const btnText = document.getElementById('btn-copy-text');
-        const originalText = typeof CONFIG !== 'undefined' ? CONFIG.common_i18n[l].copy : (l === 'ua' ? 'Копіювати звіт' : 'Copy Report');
+        const originalText = (typeof CONFIG !== 'undefined' && CONFIG.common_i18n[l].copy) ? CONFIG.common_i18n[l].copy : (l === 'ua' ? 'Копіювати' : 'Copy');
 
         function showSuccess() {
-            const successText = typeof CONFIG !== 'undefined' ? CONFIG.common_i18n[l].copied : (l === 'ua' ? 'Скопійовано!' : 'Copied!');
-            btnText.innerText = successText;
+            btnText.innerText = (typeof CONFIG !== 'undefined' && CONFIG.common_i18n[l].copied) ? CONFIG.common_i18n[l].copied : (l === 'ua' ? 'Скопійовано!' : 'Copied!');
             setTimeout(() => { btnText.innerText = originalText; }, 2000);
         }
 
-        function fallbackCopy(text) {
-            const textArea = document.createElement("textarea");
-            textArea.value = text;
-            textArea.style.position = "fixed";
-            textArea.style.left = "-9999px";
-            textArea.style.top = "0";
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            try {
-                document.execCommand('copy');
-                showSuccess();
-            } catch (err) {
-                console.error('Fallback copy failed', err);
-            }
-            document.body.removeChild(textArea);
-        }
-
         if (navigator.clipboard && window.isSecureContext) {
-            navigator.clipboard.writeText(textToCopy).then(showSuccess).catch(() => fallbackCopy(textToCopy));
-        } else {
-            fallbackCopy(textToCopy);
+            navigator.clipboard.writeText(textToCopy).then(showSuccess).catch(() => {
+                const textArea = document.createElement("textarea");
+                textArea.value = textToCopy;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showSuccess();
+            });
         }
     }
 
