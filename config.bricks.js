@@ -1,215 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Convert LEGO Bricks Weight to Pieces | Bricks-Repo</title>
+const CONFIG = {
+    // 1. Ідентифікація (Core)
+    branch_name: "Bricks-Repo",
+    version: "2.0.4",
+    updated: "2026-02-28",
+    hub_url: "https://bricks-repo.github.io/",
+    org_name: "ProfitRepo",
+    ideas_email: "myprofitrepo+idea+bricks@gmail.com",
     
-    <script src="config.bricks.js" defer></script>
-    <script type="application/ld+json" id="ld-schema"></script>
-    
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧱</text></svg>">
+    // 2. SEO & Соціальні мережі (Master SEO)
+    seo: {
+        title_suffix: " | Bricks-Repo",
+        default_desc: "Professional LEGO tools for collectors and resellers.",
+        twitter: "@ProfitRepo",
+        og_default_img: "https://bricks-repo.github.io/assets/og-main.jpg",
+        category: "SoftwareApplication",
+        keywords: "LEGO, bricks, calculator, bricklink, moc, parts weight"
+    },
 
-    <style>
-        :root { 
-            --primary: #e3000b; --secondary: #ffdd00; --bg: #f0f2f5; --text: #1a1a1a; 
-            --radius-lg: 24px; --radius-md: 16px; --shadow-card: 0 10px 30px rgba(0,0,0,0.08); 
-        }
-        body { font-family: system-ui, -apple-system, sans-serif; margin: 0; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
-        
-        /* Навігація */
-        nav { background: #1a1a1a; padding: 12px 25px; display: flex; justify-content: space-between; align-items: center; min-height: 50px; }
-        nav a, .lang-switch button { color: white; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 8px; }
-        .lang-switch button { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; margin-left: 5px; }
-        
-        /* Контент */
-        main { max-width: 480px; margin: 40px auto; background: #ffffff; padding: 30px; border-radius: var(--radius-lg); box-shadow: var(--shadow-card); text-align: center; }
-        h1 { font-size: 1.6rem; font-weight: 800; margin: 0 0 25px 0; line-height: 1.2; }
-        
-        /* Режими */
-        .modes { display: flex; justify-content: center; gap: 8px; margin-bottom: 25px; }
-        .mode-btn { flex: 1; background: #f4f4f4; border: 1px solid #eee; padding: 12px 8px; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: 0.2s; }
-        .mode-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
-        
-        /* Ввід та Результат */
-        input { width: 100%; box-sizing: border-box; padding: 15px; border: 2px solid #eee; border-radius: var(--radius-md); font-size: 2.5rem; text-align: center; font-weight: 900; background: #fafafa; margin-bottom: 10px; outline: none; }
-        input:focus { border-color: var(--primary); background: #fff; }
-        .result-box { background: #1a1a1a; color: white; padding: 30px; border-radius: var(--radius-md); margin: 25px 0; min-height: 120px; }
-        .result { font-size: 4rem; font-weight: 900; color: var(--secondary); display: block; line-height: 1; }
-        
-        /* Звіт та Копіювання */
-        .report-preview { display: none; background: rgba(255,255,255,0.05); margin-top: 20px; padding: 15px; border-radius: 10px; text-align: left; font-size: 0.85rem; border: 1px solid rgba(255,255,255,0.1); }
-        .btn-copy { background: var(--secondary); color: #1a1a1a; border: none; padding: 14px; border-radius: 10px; width: 100%; font-weight: 700; cursor: pointer; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        
-        /* Кнопка Сапорту */
-        .btn-coffee { display: inline-flex; align-items: center; gap: 8px; background: #ffffff; padding: 14px 25px; border-radius: var(--radius-md); text-decoration: none; color: #1a1a1a; font-weight: 700; border: 1px solid #eee; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        
-        /* Футер */
-        footer { margin-top: 50px; padding: 20px 0; border-top: 1px dashed #ddd; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-        .idea-block { display: flex; align-items: center; font-weight: 600; font-size: 0.9rem; }
-        .idea-block a { text-decoration: none; color: var(--primary); font-weight: 700; margin-left: 4px; }
-        .idea-svg { width: 20px; height: 20px; display: block; }
-    </style>
-</head>
-<body>
-
-<nav>
-    <a href="/" id="link-hub">⬅ <span id="back">Hub</span></a>
-    <div class="lang-switch" id="lang-selectors"></div>
-</nav>
-
-<main>
-    <h1 id="t_title">Convert LEGO Bricks Weight to Pieces</h1>
-    
-    <div class="modes">
-        <button class="mode-btn active" onclick="setMode(1.5, this)" id="m_mix">Mixed Bricks</button>
-        <button class="mode-btn" onclick="setMode(2.0, this)" id="m_tech">Technic Parts</button>
-        <button class="mode-btn" onclick="setMode(0.6, this)" id="m_small">Small Parts</button>
-    </div>
-
-    <label for="weight" id="t_desc" style="font-weight:600; display:block; margin-bottom:8px;">Weight (grams)</label>
-    <input type="number" id="weight" placeholder="0" oninput="calculate()" min="0" inputmode="decimal">
-    
-    <section class="result-box">
-        <span class="result" id="res">0</span>
-        <span id="t_pieces" style="text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1.5px; opacity: 0.8;">Estimated Pieces</span>
-        
-        <div id="report-container" class="report-preview">
-            <div id="report_text" style="white-space: pre-line; margin-bottom: 10px; font-family: monospace;"></div>
-            <button class="btn-copy" onclick="copyResult()">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                <span id="copy">Copy</span>
-            </button>
-        </div>
-    </section>
-
-    <a href="#" id="link-support" class="btn-coffee"><span id="support">Support Project</span></a>
-
-    <footer>
-        <div class="idea-block">
-            <div id="icon-idea"></div>
-            <span id="f_idea_q"> Idea?</span>
-            <a href="#" id="f-link-mailto"><span id="f_idea_a">Write to us</span></a>
-        </div>
-        <div id="f_copy" style="font-size: 0.7rem; color: #999; text-transform: uppercase; letter-spacing: 1px;">© 2026 PROFITREPO</div>
-    </footer>
-</main>
-
-<script>
-    let currentRatio = 1.5;
-    const toolID = "bricks-weight-calculator";
-
-    const tool_i18n = {
-        en: { 
-            t_title: "Convert LEGO Bricks Weight to Pieces", t_desc: "Weight in grams (g)", t_pieces: "Estimated Pieces", 
-            m_mix: "Mixed Bricks", m_tech: "Technic Parts", m_small: "Small Parts", 
-            report: "📊 LEGO Report:\nWeight: {w}g\nEst: ~{p} pcs.\n{u}" 
+    // 3. Розширений стайлінг (Deep Design System)
+    style: {
+        theme: "bright-playful",
+        favicon: "🧱",
+        colors: {
+            primary: "#e3000b",    // LEGO Red
+            secondary: "#ffdd00",  // LEGO Yellow
+            accent: "#0055a2",     // LEGO Blue
+            bg: "#f4f4f4",
+            text: "#111111"
         },
-        ua: { 
-            t_title: "Перевести вагу деталей LEGO в кількість", t_desc: "Вага в грамах (г)", t_pieces: "Приблизна кількість деталей", 
-            m_mix: "Суміш деталей", m_tech: "Technic деталі", m_small: "Дрібні деталі", 
-            report: "📊 LEGO Звіт:\nВага: {w}г\nК-сть: ~{p} шт.\n{u}" 
+        ui: {
+            radius: "20px",
+            border: "3px solid #111111",
+            shadow: "0 6px 0 #111111" // Плаский ретро-стиль
         }
-    };
+    },
 
-    function applyConfig() {
-        if (typeof CONFIG === 'undefined') return;
-        const s = CONFIG.style;
-        const root = document.documentElement.style;
-        root.setProperty('--primary', s.colors.primary);
-        root.setProperty('--secondary', s.colors.secondary);
-        root.setProperty('--bg', s.colors.bg);
-        root.setProperty('--text', s.colors.text);
-        
-        document.getElementById('link-hub').href = CONFIG.hub_url;
-        document.getElementById('link-support').href = CONFIG.urls.support;
-        document.getElementById('f_copy').innerText = `© 2026 ${CONFIG.branch_name || 'PROFITREPO'}`;
+    icons: {
+            idea: `<svg class="idea-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M50 15c-19.3 0-35 15.7-35 35 0 11.9 5.9 22.4 15 28.7V85h40V78.7c9.1-6.3 15-16.8 15-28.7 0-19.3-15.7-35-35-35z" fill="#FFD700"/><path d="M40 85h20v5H40zM35 80h30v3H35z" fill="#A9A9A9"/><path d="M50 25v10M32.3 32.3l7.1 7.1M25 50h10M32.3 67.7l7.1-7.1M67.7 32.3l-7.1 7.1M75 50h-10M67.7 67.7l-7.1-7.1" stroke="#FFF" stroke-width="3" stroke-linecap="round"/></svg>`
+        },
 
-        if (CONFIG.icons?.idea) {
-            document.getElementById('icon-idea').innerHTML = CONFIG.icons.idea;
-        }
+    // 4. Посилання та Монетизація (Traffic Flow)
+    urls: {
+        support: "https://www.buymeacoffee.com/bricks-repo",
+        patreon: "https://patreon.com/bricksrepo",
+        suggestion: "https://github.com/ProfitRepo/bricks-repo.github.io/issues",
+        affiliate_bricklink: "https://www.bricklink.com",
+        affiliate_amazon: "https://amazon.com/lego"
+    },
 
-        const langContainer = document.getElementById('lang-selectors');
-        langContainer.innerHTML = Object.keys(CONFIG.common_i18n).map(lang => 
-            `<button onclick="changeLang('${lang}')">${lang.toUpperCase()}</button>`
-        ).join('');
-    }
-
-    function changeLang(l) {
-        localStorage.setItem('bricks_lang', l);
-        const hasConfig = typeof CONFIG !== 'undefined';
-        const translations = { ...(hasConfig ? CONFIG.common_i18n[l] : {}), ...tool_i18n[l] };
-
-        // Оновлення UI
-        Object.keys(translations).forEach(key => {
-            const el = document.getElementById(key);
-            if (el) el.innerText = translations[key];
-        });
-
-        // Mailto логіка
-        const email = hasConfig ? CONFIG.ideas_email : 'myprofitrepo@gmail.com';
-        const mailUrl = `mailto:${email}?subject=${encodeURIComponent('Idea: ' + toolID)}`;
-        document.getElementById('f-link-mailto').setAttribute('href', mailUrl);
-        
-        document.title = translations.t_title + (hasConfig ? ` | ${CONFIG.org_name}` : "");
-        
-        // Schema.org
-        const schema = {
-            "@context": "https://schema.org",
-            "@type": "WebApplication",
-            "name": translations.t_title,
-            "url": window.location.href,
-            "applicationCategory": "UtilityApplication",
-            "author": { "@type": "Organization", "name": hasConfig ? CONFIG.org_name : "ProfitRepo" },
-            "description": translations.t_desc,
-            "inLanguage": l
-        };
-        document.getElementById('ld-schema').text = JSON.stringify(schema);
-
-        calculate();
-    }
-
-    function calculate() {
-        const w = document.getElementById('weight').value;
-        const l = localStorage.getItem('bricks_lang') || 'en';
-        const res = document.getElementById('res');
-        const rep = document.getElementById('report-container');
-        
-        if (w > 0) {
-            const p = Math.round(w / currentRatio);
-            res.innerText = p.toLocaleString();
-            const u = typeof CONFIG !== 'undefined' ? CONFIG.hub_url : window.location.origin;
-            document.getElementById('report_text').innerText = (tool_i18n[l] || tool_i18n['en']).report.replace('{w}', w).replace('{p}', p).replace('{u}', u);
-            rep.style.display = 'block';
-        } else { 
-            res.innerText = "0"; 
-            rep.style.display = 'none'; 
+    // 5. Shared i18n Interface (Глобальні елементи інтерфейсу)
+    common_i18n: {
+        en: {
+            back: "Bricks-Repo Hub",
+            support: "Support Project",
+            copy: "Copy",
+            copied: "Copied!",
+            calculate: "Calculate",
+            share: "Share Result",
+            f_idea_q: " Idea?",
+            f_idea_a: "Write to us",
+        },
+        ua: {
+            back: "Bricks-Repo Xaб",
+            support: "Підтримати",
+            copy: "Копіювати",
+            copied: "Скопійовано!",
+            calculate: "Розрахувати",
+            share: "Поділитися",
+            f_idea_q: " Ідея?",
+            f_idea_a: "Напишіть нам",
         }
     }
-
-    function setMode(r, btn) {
-        currentRatio = r;
-        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        calculate();
-    }
-
-    function copyResult() {
-        const text = document.getElementById('report_text').innerText;
-        const l = localStorage.getItem('bricks_lang') || 'en';
-        const btnSpan = document.querySelector('.btn-copy span');
-        const originalText = btnSpan.innerText;
-        
-        navigator.clipboard.writeText(text).then(() => {
-            btnSpan.innerText = (typeof CONFIG !== 'undefined' && CONFIG.common_i18n[l].copied) ? CONFIG.common_i18n[l].copied : "Copied!";
-            setTimeout(() => btnSpan.innerText = originalText, 2000);
-        });
-    }
-
-    document.addEventListener('DOMContentLoaded', () => { 
-        applyConfig(); 
-        changeLang(localStorage.getItem('bricks_lang') || 'en'); 
-    });
-</script>
-</body>
-</html>
+};
+Object.freeze(CONFIG);
