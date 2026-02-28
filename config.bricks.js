@@ -43,7 +43,7 @@ const CONFIG = {
     urls: {
         support: "https://www.buymeacoffee.com/bricks-repo",
         patreon: "https://patreon.com/bricksrepo",
-        suggestion: "https://github.com/ProfitRepo/bricks-repo.github.io/issues",
+        suggestion: "https://forms.gle/d6uqGp8JFXGEVuxt7",
         affiliate_bricklink: "https://www.bricklink.com",
         affiliate_amazon: "https://amazon.com/lego"
     },
