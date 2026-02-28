@@ -53,9 +53,7 @@ const CONFIG = {
             copied: "Copied!",
             calculate: "Calculate",
             share: "Share Result",
-            f_title: "Suggest an Idea",
-            f_desc: "Tell us which tool you need next.",
-            f_send: "Write to Architect"
+            f_idea: "Have an Idea? Write to us"
         },
         ua: {
             back: "Bricks-Repo Xaб",
@@ -64,9 +62,7 @@ const CONFIG = {
             copied: "Скопійовано!",
             calculate: "Розрахувати",
             share: "Поділитися",
-            f_title: "Запропонувати ідею",
-            f_desc: "Напишіть, якого інструменту вам не вистачає.",
-            f_send: "Написати Архітектору"
+            f_idea: "Маєте ідею? Напишіть нам"
         }
     }
 };
