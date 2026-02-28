@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LEGO Weight to Pieces | Bricks-Repo</title>
+    <title>Convert LEGO Bricks Weight to Pieces | Bricks-Repo</title>
     
     <script src="config.bricks.js" defer></script>
     <script type="application/ld+json" id="ld-schema"></script>
@@ -32,21 +32,18 @@
         .btn-copy { background: var(--secondary); color: #1a1a1a; border: none; padding: 14px; border-radius: 10px; width: 100%; font-weight: 700; cursor: pointer; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-coffee { display: inline-flex; align-items: center; gap: 8px; background: #ffffff; padding: 14px 25px; border-radius: var(--radius-md); text-decoration: none; color: #1a1a1a; font-weight: 700; border: 1px solid #eee; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         footer { margin-top: 50px; padding: 20px 0; border-top: 1px dashed #ddd; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-        footer a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text); font-weight: 600; font-size: 0.9rem; }
+        footer a { display: flex; align-items: center; gap: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
 <nav>
-    <a href="/" id="link-hub">⬅ <span id="nav_back">Hub</span></a>
-    <div class="lang-switch" id="lang-selectors">
-        <button onclick="changeLang('en')">EN</button>
-        <button onclick="changeLang('ua')">UA</button>
-    </div>
+    <a href="/" id="link-hub">⬅ <span id="nav_back">Bricks-Repo Hub</span></a>
+    <div class="lang-switch" id="lang-selectors"></div>
 </nav>
 
 <main>
-    <h1 id="t_title">LEGO Weight to Pieces</h1>
+    <h1 id="t_title">Convert LEGO Bricks Weight to Pieces</h1>
     
     <div class="modes">
         <button class="mode-btn active" onclick="setMode(1.5, this)" id="m_mix">Mixed Bricks</button>
@@ -54,7 +51,7 @@
         <button class="mode-btn" onclick="setMode(0.6, this)" id="m_small">Small Parts</button>
     </div>
 
-    <label for="weight" id="t_desc" style="font-weight:600; display:block; margin-bottom:8px;">Weight in grams (g)</label>
+    <label for="weight" id="t_desc" style="font-weight:600; display:block; margin-bottom:8px;">Weight (grams)</label>
     <input type="number" id="weight" placeholder="0" oninput="calculate()" min="0" inputmode="decimal">
     
     <section class="result-box">
@@ -70,14 +67,16 @@
         </div>
     </section>
 
-    <a href="https://patreon.com" id="link-support" class="btn-coffee"><span id="btn_support">Support Project</span></a>
+    <a href="#" id="link-support" class="btn-coffee"><span id="btn_support">Support Project</span></a>
 
     <footer>
-        <a href="mailto:myprofitrepo@gmail.com" id="f-link">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary); fill: rgba(227, 0, 11, 0.05);"><path d="M9 18h6m-3-15a7 7 0 0 0-5.36 11.5c.59.69.86 1.7.86 2.5v1a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1v-1c0-.8.27-1.81.86-2.5A7 7 0 0 0 12 3z"></path></svg>
-            <span id="f_idea">Have an Idea? Write to us</span>
+        <a href="#" id="f-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #ffdd00; fill: rgba(255, 221, 0, 0.1);">
+                <path d="M9 18h6m-3-15a7 7 0 0 0-5.36 11.5c.59.69.86 1.7.86 2.5v1a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1v-1c0-.8.27-1.81.86-2.5A7 7 0 0 0 12 3z"></path>
+            </svg>
+            <span id="f_idea" style="color: var(--primary);">Have an Idea? Write to us</span>
         </a>
-        <div style="font-size: 0.7rem; color: #999; text-transform: uppercase;">© 2026 PROFITREPO</div>
+        <div id="f_copy" style="font-size: 0.7rem; color: #999; text-transform: uppercase; letter-spacing: 1px;">© 2026 PROFITREPO</div>
     </footer>
 </main>
 
@@ -85,17 +84,29 @@
     let currentRatio = 1.5;
     const toolID = "weight-to-pieces-calculator";
 
-    // Локальні переклади для калькулятора (fallbacks)
     const tool_i18n = {
-        en: { t_title: "LEGO Weight to Pieces", t_desc: "Weight in grams (g)", t_pieces: "Estimated Pieces", m_mix: "Mixed Bricks", m_tech: "Technic Parts", m_small: "Small Parts", report: "📊 LEGO Report:\nWeight: {w}g\nEst: ~{p} pcs.\n{u}" },
-        ua: { t_title: "Вага LEGO в кількість", t_desc: "Вага в грамах (г)", t_pieces: "Приблизна кількість", m_mix: "Суміш деталей", m_tech: "Technic деталі", m_small: "Дрібні деталі", report: "📊 LEGO Звіт:\nВага: {w}г\nК-сть: ~{p} шт.\n{u}" }
+        en: { 
+            t_title: "Convert LEGO Bricks Weight to Pieces", 
+            t_desc: "Weight in grams (g)", 
+            t_pieces: "Estimated Pieces", 
+            m_mix: "Mixed Bricks", 
+            m_tech: "Technic Parts", 
+            m_small: "Small Parts", 
+            report: "📊 LEGO Report:\nWeight: {w}g\nEst: ~{p} pcs.\n{u}" 
+        },
+        ua: { 
+            t_title: "Перевести вагу деталей LEGO в кількість", 
+            t_desc: "Вага в грамах (г)", 
+            t_pieces: "Приблизна кількість деталей", 
+            m_mix: "Суміш деталей", 
+            m_tech: "Technic деталі", 
+            m_small: "Дрібні деталі", 
+            report: "📊 LEGO Звіт:\nВага: {w}г\nК-сть: ~{p} шт.\n{u}" 
+        }
     };
 
     function applyConfig() {
-        if (typeof CONFIG === 'undefined') {
-            console.warn("CONFIG not loaded, using hardcoded fallbacks.");
-            return;
-        }
+        if (typeof CONFIG === 'undefined') return;
         const s = CONFIG.style;
         const root = document.documentElement.style;
         root.setProperty('--primary', s.colors.primary);
@@ -105,8 +116,8 @@
         
         document.getElementById('link-hub').href = CONFIG.hub_url;
         document.getElementById('link-support').href = CONFIG.urls.support;
-        
-        // Генерація кнопок мов тільки якщо є CONFIG
+        document.getElementById('f_copy').innerText = `© 2026 ${CONFIG.branch_name || 'PROFITREPO'}`;
+
         const langContainer = document.getElementById('lang-selectors');
         langContainer.innerHTML = Object.keys(CONFIG.common_i18n).map(lang => 
             `<button onclick="changeLang('${lang}')">${lang.toUpperCase()}</button>`
@@ -116,25 +127,20 @@
     function changeLang(l) {
         localStorage.setItem('bricks_lang', l);
         const hasConfig = typeof CONFIG !== 'undefined';
-        
-        // Збираємо переклади: спочатку локальний фолбек, потім (якщо є) дані з конфігу
-        const localT = tool_i18n[l] || tool_i18n['en'];
-        const configT = (hasConfig && CONFIG.common_i18n[l]) ? CONFIG.common_i18n[l] : {};
-        
-        const translations = { ...configT, ...localT };
+        const translations = { ...(hasConfig ? CONFIG.common_i18n[l] : {}), ...tool_i18n[l] };
 
-        // Автоматичне оновлення елементів по ID
         Object.keys(translations).forEach(key => {
             const el = document.getElementById(key);
             if (el) el.innerText = translations[key];
         });
 
-        // Кастомна логіка
-        const email = hasConfig ? CONFIG.idea_email : 'myprofitrepo@gmail.com';
+        // ПРАВИЛЬНИЙ КЛЮЧ: ideas_email
+        const email = hasConfig ? CONFIG.ideas_email : 'myprofitrepo+ideas+bricks@gmail.com';
         document.getElementById('f-link').href = `mailto:${email}?subject=${encodeURIComponent('Idea: ' + toolID)}`;
+        
+        // Синхронізація заголовку вкладки
         document.title = translations.t_title + (hasConfig ? ` | ${CONFIG.org_name}` : "");
         
-        // SEO Schema
         if (hasConfig) {
             const schema = {
                 "@context": "https://schema.org",
@@ -147,22 +153,22 @@
             };
             document.getElementById('ld-schema').text = JSON.stringify(schema);
         }
-        
         calculate();
     }
 
     function calculate() {
         const w = document.getElementById('weight').value;
         const l = localStorage.getItem('bricks_lang') || 'en';
-        const res = document.getElementById('res');
-        const rep = document.getElementById('report-container');
         if (w > 0) {
             const p = Math.round(w / currentRatio);
-            res.innerText = p.toLocaleString();
+            document.getElementById('res').innerText = p.toLocaleString();
             const u = typeof CONFIG !== 'undefined' ? CONFIG.hub_url : window.location.origin;
             document.getElementById('report_text').innerText = (tool_i18n[l] || tool_i18n['en']).report.replace('{w}', w).replace('{p}', p).replace('{u}', u);
-            rep.style.display = 'block';
-        } else { res.innerText = "0"; rep.style.display = 'none'; }
+            document.getElementById('report-container').style.display = 'block';
+        } else { 
+            document.getElementById('res').innerText = "0"; 
+            document.getElementById('report-container').style.display = 'none'; 
+        }
     }
 
     function setMode(r, btn) {
