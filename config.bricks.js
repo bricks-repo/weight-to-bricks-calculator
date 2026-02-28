@@ -1,10 +1,11 @@
 const CONFIG = {
     // 1. Ідентифікація (Core)
     branch: "bricks",
-    version: "2.0.1",
+    version: "2.0.2",
     updated: "2026-02-28",
     hub_url: "https://bricks-repo.github.io/",
     org_name: "ProfitRepo",
+    idea_email: "myprofitrepo+idea+bricks@gmail.com",
     
     // 2. SEO & Соціальні мережі (Master SEO)
     seo: {
