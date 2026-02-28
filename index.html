@@ -39,7 +39,9 @@
 
         footer { margin-top: 50px; padding: 20px 0; border-top: 1px dashed #ddd; text-align: center; }
         .idea-block { display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.9rem; margin-bottom: 10px; }
-        .idea-block a { text-decoration: none; color: var(--primary); font-weight: 700; margin-left: 4px; cursor: pointer; }
+
+        .idea-block a { text-decoration: none; color: var(--primary); font-weight: 700; margin-left: 4px; cursor: pointer; position: relative; }
+        #mail-tip { display: none; position: absolute; top: -25px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; }
         .idea-svg { width: 20px; height: 20px; margin-right: 2px; }
         #f_copy { font-size: 0.7rem; color: #999; text-transform: uppercase; letter-spacing: 1px; }
     </style>
@@ -82,7 +84,10 @@
         <div class="idea-block">
             <div id="icon-idea"></div>
             <span id="f_idea_q"> Idea?</span>
-            <a id="f-link-mailto" onclick="sendEmail()"><span id="f_idea_a">Write to us</span></a>
+            <a id="f-link-mailto" onclick="sendEmail()" target="_blank">
+                <span id="f_idea_a">Write to us</span>
+                <span id="mail-tip">Copied!</span>
+            </a>
         </div>
         <div id="f_copy">© 2026 BRICKS-REPO</div>
     </footer>
@@ -126,12 +131,21 @@
         ).join('');
     }
 
-    // Виправлена функція відправки імейлу
+    // Покращена функція відправки імейлу з копіюванням адреси
     function sendEmail() {
         const hasConfig = typeof CONFIG !== 'undefined';
         const email = hasConfig ? CONFIG.ideas_email : 'myprofitrepo+ideas+bricks@gmail.com';
         const subject = encodeURIComponent('Idea: ' + toolID);
-        window.location.href = `mailto:${email}?subject=${subject}`;
+        
+        // Копіюємо імейл (План Б)
+        navigator.clipboard.writeText(email).then(() => {
+            const tip = document.getElementById('mail-tip');
+            tip.style.display = 'block';
+            setTimeout(() => tip.style.display = 'none', 2000);
+        });
+
+        // Відкриваємо поштовий клієнт (План А)
+        window.open(`mailto:${email}?subject=${subject}`, '_blank');
     }
 
     function changeLang(l) {
